@@ -7,7 +7,9 @@ services:
       - ./access.log:/var/log/nginx/access.log
       - ./app:/usr/share/nginx/html
     ports:
-      - 8080:80
+      - 9090:80
+    networks:
+      - toler-express-apps
 
   postgres-db:
     image: postgres:16.2
@@ -23,7 +25,7 @@ services:
 
   auth-backend-app:
     build:
-      context: https://github.com/etec-integration-project/etec-pi-2024-backend-TolerTomas
+      context: https://github.com/etec-integration-project/etec-pi-2024-backend-TolerTomas.git
       dockerfile: Dockerfile
     restart: always
     ports:
@@ -39,26 +41,26 @@ services:
     networks:
       - toler-express-apps
 
-  file-server-backend-app:
-    build:
-      context: https://github.com/etec-integration-project/etec-pi-2024-microservice-TolerTomas
-      dockerfile: Dockerfile
-    restart: always
-    ports:
-      - 8080:8080
-    environment:
-      - AUTH_SERVER_ADDRESS=auth-backend-app
-      - AUTH_SERVER_USERNAME=file-server
-      - AUTH_SERVER_PASSWORD=12345678
-      - STORAGE_URL=/app-storage
-    volumes:
-      - ./app-storage:/app/storage
-    networks:
-      - toler-express-apps
+#   file-server-backend-app:
+#     build:
+#       context: https://github.com/etec-integration-project/etec-pi-2024-microservice-TolerTomas.git
+#       dockerfile: Dockerfile
+#     restart: always
+#     ports:
+#       - 8080:8080
+#     environment:
+#       - AUTH_SERVER_ADDRESS=auth-backend-app
+#       - AUTH_SERVER_USERNAME=file-server
+#       - AUTH_SERVER_PASSWORD=12345678
+#       - STORAGE_URL=/app-storage
+#     volumes:
+#       - ./app-storage:/app/storage
+#     networks:
+#       - toler-express-apps
 
 networks:
   toler-express-apps:
     external: true
 
-volumes:
-  app-storage:
+# volumes:
+#   app-storage:
