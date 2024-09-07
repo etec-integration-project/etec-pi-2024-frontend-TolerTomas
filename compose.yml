@@ -8,6 +8,8 @@ services:
       - ./app:/usr/share/nginx/html
     ports:
       - 9090:80
+    depends_on:
+      - auth-backend-app
     networks:
       - toler-express-apps
 

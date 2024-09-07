@@ -21,5 +21,32 @@
             <button type="submit">Registrarse</button>
         </form>
     </main>
+    <script>
+        const form = document.querySelector('#form');
+
+        form.addEventListener('submit', e => {
+            e.preventDefault()
+            const data = new FormData(form)
+            const fbody = {
+                name: data.get('name'),
+                lastname: data.get('lastname'),
+                email: data.get('email'),
+                password: data.get('password'),
+            }
+
+            fetch('/api/users/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(fbody),
+                credentials: 'include'
+            })
+                .then(r => r.json())
+                .then(res => {
+                    console.log(res)
+                })
+        })
+    </script>
 </body>
 </html>
