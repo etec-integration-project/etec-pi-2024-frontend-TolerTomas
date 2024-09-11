@@ -9,11 +9,11 @@
 <body>
     <header id="header"></header>
     <main>
-        <form action="http://127.0.0.1:3000/auth/" method="post">
+        <form id="form" method="POST">
             <label for="name">Nombre: </label>
             <input type="text" id="name" name="name" placeholder="Nombre...">
             <label for="lastname">Apellido: </label>
-            <input type="text" id="name" name="lastname" placeholder="Apellido...">
+            <input type="text" id="lastname" name="lastname" placeholder="Apellido...">
             <label for="email">Email: </label>
             <input type="email" id="email" name="email" placeholder="Email...">
             <label for="name">Contraseña: </label>
@@ -34,6 +34,8 @@
                 password: data.get('password'),
             }
 
+            console.log(fbody)
+
             fetch('/api/users/register', {
                 method: 'POST',
                 headers: {
@@ -45,6 +47,8 @@
                 .then(r => r.json())
                 .then(res => {
                     console.log(res)
+                    localStorage.setItem('user', JSON.stringify(res.user))
+                    location.href = '/storage/index.html'
                 })
         })
     </script>

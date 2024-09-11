@@ -14,6 +14,29 @@ function navbar() {
         </nav>`
         return
     }
+
+    $header.innerHTML = `<nav>
+            <ul>
+                <button id="logout-button" >Cerrar sesión</button>
+            </ul>
+        </nav>`
+
+        const $logoutbtn = $('#logout-button')
+
+        $logoutbtn.addEventListener('click', async (e) => {
+            e.preventDefault()
+            fetch('/api/users/logout', {
+                method: 'POST',
+                credentials: 'include'
+            })
+                .then(() => {
+                    localStorage.removeItem('user')
+                    location.href = '/'
+                })
+        })
+    
+    return
 }
 
 navbar()
+
