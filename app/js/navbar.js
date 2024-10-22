@@ -31,6 +31,7 @@ function navbar() {
             })
                 .then(() => {
                     localStorage.removeItem('user')
+                    localStorage.removeItem('path')
                     location.href = '/'
                 })
         })

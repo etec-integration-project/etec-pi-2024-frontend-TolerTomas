@@ -14,4 +14,4 @@ docker compose up --build
 ```
 
 ### Testing (entre comillas)
-Ir a http://localhost:8080
+Ir a http://localhost:9090

@@ -34,8 +34,6 @@
                 password: data.get('password'),
             }
 
-            console.log(fbody)
-
             fetch('/api/users/register', {
                 method: 'POST',
                 headers: {
@@ -48,7 +46,8 @@
                 .then(res => {
                     console.log(res)
                     localStorage.setItem('user', JSON.stringify(res.user))
-                    location.href = '/storage/index.html'
+                    localStorage.setItem('path', JSON.stringify('/'))
+                    location.href = '/data/index.html'
                 })
         })
     </script>

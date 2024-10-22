@@ -56,13 +56,14 @@ services:
       - AUTH_SERVER_ADDRESS=auth-backend-app
       - AUTH_SERVER_USERNAME=file-server
       - AUTH_SERVER_PASSWORD=12345678
-      - STORAGE_URL=/app-storage
+      - STORAGE_URL=app-storage
     depends_on:
       - auth-backend-app
     volumes:
-      - ./app-storage:/app/storage
+      - ./app-storage:/app/app-storage
     networks:
       - toler-express-apps
+    entrypoint: /bin/sh -c "sleep 10 && pnpm run dev"
 
 networks:
   toler-express-apps:
