@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Disket</title>
     <script src="/js/navbar.js" defer></script>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-    <header id="header"></header>
+    <header id="header" class="w-full p-4 flex items-center justify-between bg-gray-200"></header>
     <h1>Storage</h1>
     <form id="create-dir-form" method="POST">
         <h1>Create dir</h1>
@@ -22,36 +23,28 @@
     </ul>
 
     <script>
-
-        // (() => {
-        //     fetch('/storage/list', {
-        //         method: 'GET',
-        //         headers: {
-        //             'Content-Type': 'application/json'
-        //         },
-        //         body: JSON.stringify({ path: localStorage.getItem('path') }),
-        //         credentials: 'include'
-        //     })
-        //         .then(r => r.json().content)
-        //         .then(content => {
-        //             // console.log(res)
-        //             const $contentDir = document.querySelector('#content-dir')
-        //             content.files.forEach(file => {
-        //                 const $li = document.createElement('li')
-        //                 $li.innerHTML = `<a href="/storage/download/${file.path}">${file.name}</a>`
-        //                 $contentDir.appendChild($li)
-        //             })
-
-        //             content.directories.forEach(dir => {
-        //                 const $li = document.createElement('li')
-        //                 $li.innerHTML = ``
-        //             })
-
-                    
-        //         })
-        // })()
-
+        const $contentDir = document.querySelector('#content-dir')
         const $form = document.querySelector('#create-dir-form')
+
+        fetch('/storage/list-dir', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ path: localStorage.getItem('path') }),
+            credentials: 'include'
+        })
+            .then(r => r.json().content)
+            .then(content => {
+                // TODO: handle case when path is a file
+
+                content.directories.forEach(dir => {
+                    const $p = document.createElement('p')
+                    $p.innerHTML = `<p>${dir}</p>`
+                    $contentDir.appendChild($p)
+                })
+            })
+
 
         $form.addEventListener('submit', e => {
             e.preventDefault();

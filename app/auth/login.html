@@ -5,20 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Disket</title>
     <script src="/js/navbar.js" defer></script>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-    <header id="header"></header>
-    <main>
-        <form id="form" method="POST">
-            <label>
+    <header id="header" class="w-full h-[10vh] p-4 flex items-center justify-between bg-gray-200"></header>
+    <main class="w-screen h-[90vh] flex flex-col items-center justify-center">
+        <form class="flex flex-col gap-2" id="form" method="POST">
+            <label for="email">
                 Email:
-                <input type="email" name="email" id="email">
             </label>
-            <label>
+                <input class="px-2 py-1 border-2 border-black rounded" type="email" name="email" id="email">
+            <label for="password">
                 Password:
-                <input type="password" name="password" id="password">
             </label>
-            <input type="submit" value="Ingresar">
+                <input class="px-2 py-1 border-2 border-black rounded" type="password" name="password" id="password">
+            <button type="submit" class="rounded py-2 px-4 bg-blue-500 text-white">Ingresar</button>
         </form>
     </main>
 
