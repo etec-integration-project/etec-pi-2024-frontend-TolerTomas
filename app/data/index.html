@@ -8,40 +8,68 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-    <header id="header" class="w-full p-4 flex items-center justify-between bg-gray-200"></header>
-    <h1>Storage</h1>
-    <form id="create-dir-form" method="POST">
-        <h1>Create dir</h1>
-        <label>
-            <input type="text" name="newDir" placeholder="Nombre carpeta ...">
-        </label>
-        <button type="submit">Crear Carpeta</button>
-    </form>
+    <header id="header" class="w-full h-[10vh] p-4 flex items-center justify-between bg-gray-200"></header>
 
-    <ul id="content-dir">
+    <main class="w-screen h-[90vh] flex flex-col items-center justify-center gap-4 relative">
 
-    </ul>
+        <button id="go-back-btn" class="absolute top-4 left-4 px-4 py-2 bg-blue-500 rounded text-white">Go Back</button>
+
+        <form id="create-dir-form" method="POST" class="flex flex-col gap-2 items-center" >
+            <h1>Create Directory</h1>
+                <input class="px-2 py-1 border-2 border-black rounded" id="newDir" type="text" name="newDir" placeholder="Nombre carpeta ...">
+            <button type="submit" class="rounded py-2 px-4 bg-blue-500 text-white w-full">Crear Carpeta</button>
+        </form>
+    
+        <ul id="content-dir" class="flex flex-col gap-2">
+    
+        </ul>
+    </main>
+
 
     <script>
+        const $goBackBtn = document.querySelector('#go-back-btn')
         const $contentDir = document.querySelector('#content-dir')
         const $form = document.querySelector('#create-dir-form')
 
-        fetch('/storage/list-dir', {
-            method: 'GET',
+        $goBackBtn.addEventListener('click', e => {
+            e.preventDefault()
+            let path = JSON.parse(localStorage.getItem('path'))
+            path = path
+                .split('/')
+                .map(str => str === "" ? '/' : str)
+                .slice(0, -2)
+                .join('')
+            localStorage.setItem('path', JSON.stringify(path))
+            location.href = '/data/index.html'
+        })
+
+        fetch('/storage/list', {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ path: localStorage.getItem('path') }),
+            body: JSON.stringify({ path: JSON.parse(localStorage.getItem('path')) }),
             credentials: 'include'
         })
-            .then(r => r.json().content)
-            .then(content => {
+            .then(r => r.json())
+            .then(data => {
+                console.log(data.content)
                 // TODO: handle case when path is a file
 
-                content.directories.forEach(dir => {
-                    const $p = document.createElement('p')
-                    $p.innerHTML = `<p>${dir}</p>`
-                    $contentDir.appendChild($p)
+                data.content.directories.forEach(dir => {
+
+                    const $button = document.createElement('button')
+                    $button.innerText = `${dir}`
+
+                    $button.addEventListener('click', e => {
+                        e.preventDefault()
+                        let path = JSON.parse(localStorage.getItem('path'))
+                        path = path.concat(dir, '/')
+                        console.log(path)
+                        localStorage.setItem('path', JSON.stringify(path))
+                        location.href = '/data/index.html'
+                    })
+                    $contentDir.appendChild($button)
                 })
             })
 
@@ -68,8 +96,7 @@
                 .then(r => r.json())
                 .then(res => {
                     console.log(res)
-                    // localStorage.setItem('user', JSON.stringify(res.user))
-                    // location.href = '/storage/index.html'
+                    location.href = '/data/index.html'
                 })
         })
     </script>
