@@ -8,7 +8,7 @@ function navbar() {
         $header.innerHTML = `
         <h1>Disket</h1>
         <nav>
-            <ul class="flex list-none gap-2">
+            <ul class="flex list-none gap-4">
                 <li> <a class="hover:underline ml-2" href="/index.html">Home</a> </li>
                 <li> <a class="hover:underline ml-2" href="/auth/register.html">Registrarse</a> </li>
                 <li> <a class="hover:underline ml-2" href="/auth/login.html">Ingresar</a> </li>

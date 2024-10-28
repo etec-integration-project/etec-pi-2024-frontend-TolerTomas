@@ -12,24 +12,50 @@
 
     <main class="w-screen h-[90vh] flex flex-col items-center justify-center gap-4 relative">
 
-        <button id="go-back-btn" class="absolute top-4 left-4 px-4 py-2 bg-blue-500 rounded text-white">Go Back</button>
+        <div class="absolute z-10 top-4 left-4 flex gap-2">
+            <button id="go-back-btn" class="px-4 py-2 bg-blue-500 rounded text-white z-10">Go Back</button>
+            <p id="path-text" class="px-4 py-2 text-black z-10 font-semibold tracking-wider"></p>
+        </div>
 
-        <form id="create-dir-form" method="POST" class="flex flex-col gap-2 items-center" >
-            <h1>Create Directory</h1>
-                <input class="px-2 py-1 border-2 border-black rounded" id="newDir" type="text" name="newDir" placeholder="Nombre carpeta ...">
-            <button type="submit" class="rounded py-2 px-4 bg-blue-500 text-white w-full">Crear Carpeta</button>
-        </form>
+        <div class="forms-container w-full h-full flex justify-center items-start gap-16 pt-16"> 
+
+            <div class="flex flex-col gap-4">
+                <form id="create-dir-form" method="POST" class="flex flex-col gap-2 items-center w-64" >
+                    <h1>Create Directory</h1>
+                    <input class="px-2 py-1 border-2 border-black rounded w-full" id="newDir" type="text" name="newDir" placeholder="Nombre carpeta ...">
+                    <button type="submit" class="rounded py-2 px-4 bg-blue-500 text-white w-full">Crear Carpeta</button>
+                </form>
+                <ul id="content-dir" class="flex flex-col gap-2">
     
-        <ul id="content-dir" class="flex flex-col gap-2">
+                </ul>
+            </div>
+
+            <div class="flex-flex-col-gap-4">
+                <form method="post" class="flex flex-col gap-2 items-center w-64" id="upload-file-form">
+                    <h1>Upload File</h1>
+                    <input class="px-2 py-1 border-2 border-black rounded w-full" id="file" type="file" name="file">
+                    <button type="submit" class="rounded py-2 px-4 bg-blue-500 text-white w-full">Subir Archivo</button>
+                </form>
+                <ul id="files-dir" class="flex flex-col gap-2">
     
-        </ul>
+                </ul>
+            </div>
+
+        </div>
+    
+        
     </main>
 
 
     <script>
         const $goBackBtn = document.querySelector('#go-back-btn')
         const $contentDir = document.querySelector('#content-dir')
-        const $form = document.querySelector('#create-dir-form')
+        const $filesDir = document.querySelector('#files-dir')
+        const $createDirForm = document.querySelector('#create-dir-form')
+        const $uploadFileForm = document.querySelector('#upload-file-form')
+        const $pathText = document.querySelector('#path-text')
+
+        $pathText.innerText = JSON.parse(localStorage.getItem('path'))
 
         $goBackBtn.addEventListener('click', e => {
             e.preventDefault()
@@ -53,19 +79,27 @@
         })
             .then(r => r.json())
             .then(data => {
-                console.log(data.content)
                 // TODO: handle case when path is a file
+
+                data.content.files.forEach(file => {
+                    const $p = document.createElement('p')
+                    $p.innerText = `${file}`
+                    $filesDir.appendChild($p)
+                })
 
                 data.content.directories.forEach(dir => {
 
                     const $button = document.createElement('button')
                     $button.innerText = `${dir}`
+                    $button.classList.add('bg-gray-200')
+                    $button.classList.add('rounded')
+                    $button.classList.add('py-1')
+                    $button.classList.add('px-2')
 
                     $button.addEventListener('click', e => {
                         e.preventDefault()
                         let path = JSON.parse(localStorage.getItem('path'))
                         path = path.concat(dir, '/')
-                        console.log(path)
                         localStorage.setItem('path', JSON.stringify(path))
                         location.href = '/data/index.html'
                     })
@@ -74,16 +108,14 @@
             })
 
 
-        $form.addEventListener('submit', e => {
+        $createDirForm.addEventListener('submit', e => {
             e.preventDefault();
 
-            const data = new FormData($form);
+            const data = new FormData($createDirForm);
             const fbody = {
                 newDir: data.get('newDir'),
                 path: JSON.parse(localStorage.getItem('path'))
             }
-
-            console.log(fbody)
 
             fetch('/storage/mkdir', {
                 method: 'POST',
@@ -97,6 +129,27 @@
                 .then(res => {
                     console.log(res)
                     location.href = '/data/index.html'
+                })
+        })
+
+        $uploadFileForm.addEventListener('submit', e => {
+            e.preventDefault();
+
+            console.log(JSON.parse(localStorage.getItem('path')).slice(1, -1))
+
+            let formData = new FormData($uploadFileForm);
+
+            formData.append('path', JSON.parse(localStorage.getItem('path')).slice(1, -1))
+
+            fetch('/storage/upload', {
+                method: 'POST',
+                body: formData,
+                credentials: 'include'
+            })
+                // .then(r => r.json())
+                .then(res => {
+                    console.log(res)
+                    // location.href = '/data/index.html'
                 })
         })
     </script>
