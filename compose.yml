@@ -10,6 +10,7 @@ services:
       - toler-express-apps
     depends_on:
       - file-server-backend-app
+
   postgres-db:
     image: postgres:16.2
     restart: always

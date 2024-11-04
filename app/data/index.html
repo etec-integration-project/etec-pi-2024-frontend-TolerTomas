@@ -58,12 +58,13 @@
         $goBackBtn.addEventListener('click', e => {
             e.preventDefault()
             let path = JSON.parse(localStorage.getItem('path'))
-            path = path
+
+            path = '/' + path
                 .split('/')
-                .map(str => str === "" ? '/' : str)
-                .slice(0, -2)
+                .filter(str => str !== '')
+                .slice(0, -1)
                 .join('/')
-                .unshift('/')
+
             localStorage.setItem('path', JSON.stringify(path))
             location.href = '/data/index.html'
         })
