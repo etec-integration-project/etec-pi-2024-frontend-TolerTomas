@@ -1,21 +1,8 @@
 services:
-  # web:
-  #   image: nginx:1.27.1
-  #   volumes:
-  #     - ./nginx.conf:/etc/nginx/nginx.conf
-  #     - ./error.log:/var/log/nginx/error.log
-  #     - ./access.log:/var/log/nginx/access.log
-  #     - ./app:/usr/share/nginx/html
-  #   ports:
-  #     - 9090:80
-  #   depends_on:
-  #     - file-server-backend-app
-  #   networks:
-  #     - toler-express-apps
 
   web:
     build:
-      context: .
+      context: https://github.com/etec-integration-project/etec-pi-2024-frontend-TolerTomas.git
       dockerfile: Dockerfile
     ports:
       - 9090:80
@@ -30,8 +17,8 @@ services:
       - POSTGRES_PASSWORD=mysecretpassword
       - POSTGRES_USER=root
       - POSTGRES_DB=project-database
-    ports:
-      - 5432:5432
+    # ports:
+    #   - 5432:5432
     networks:
       - toler-express-apps
 
@@ -40,8 +27,8 @@ services:
       context: https://github.com/etec-integration-project/etec-pi-2024-backend-TolerTomas.git
       dockerfile: Dockerfile
     restart: always
-    ports:
-      - 5050:5050
+    # ports:
+    #   - 5050:5050
     depends_on:
       - postgres-db
     environment:
@@ -60,8 +47,8 @@ services:
       context: https://github.com/etec-integration-project/etec-pi-2024-microservice-TolerTomas.git
       dockerfile: Dockerfile
     restart: always
-    ports:
-      - 8080:8080
+    # ports:
+    #   - 8080:8080
     environment:
       - AUTH_SERVER_ADDRESS=auth-backend-app
       - AUTH_SERVER_USERNAME=file-server

@@ -62,7 +62,8 @@
                 .split('/')
                 .map(str => str === "" ? '/' : str)
                 .slice(0, -2)
-                .join('')
+                .join('/')
+                .unshift('/')
             localStorage.setItem('path', JSON.stringify(path))
             location.href = '/data/index.html'
         })
