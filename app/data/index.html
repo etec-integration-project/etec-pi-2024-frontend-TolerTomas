@@ -79,9 +79,16 @@
         })
             .then(r => r.json())
             .then(data => {
-                // TODO: handle case when path is a file
 
                 data.content.files.forEach(file => {
+
+                    const $container = document.createElement('div')
+                    $container.classList.add('flex')
+                    $container.classList.add('items-center')
+                    $container.classList.add('justify-between')
+                    $container.classList.add('w-full')
+                    $container.classList.add('gap-2')
+
                     const $button = document.createElement('button')
                     $button.innerText = `${file}`
                     $button.classList.add('bg-gray-200')
@@ -91,7 +98,6 @@
 
                     $button.addEventListener('click', e => {
                         e.preventDefault()
-                        console.log('downloading ...')
                         let path = JSON.parse(localStorage.getItem('path'))
                         path = path.concat(file)
                         fetch('/storage/download', {
@@ -104,7 +110,6 @@
                         })
                             .then(r => r.blob())
                             .then(blob => {
-                                console.log(blob)
                                 const url = window.URL.createObjectURL(blob)
                                 const a = document.createElement('a')
                                 a.href = url
@@ -113,7 +118,35 @@
                             })
                     })
 
-                    $filesDir.appendChild($button)
+                    const $deleteButton = document.createElement('button')
+                    $deleteButton.innerText = 'Borrar'
+                    $deleteButton.classList.add('bg-red-500')
+                    $deleteButton.classList.add('rounded')
+                    $deleteButton.classList.add('py-1')
+                    $deleteButton.classList.add('px-2')
+
+                    $deleteButton.addEventListener('click', e => {
+                        e.preventDefault()
+                        const path = JSON.parse(localStorage.getItem('path')) + file
+                        console.log('deleting ...' + path)
+
+                        fetch('/storage/delete', {
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ path: path }),
+                            credentials: 'include'
+                        })
+                            .then(r => r.json())
+                            .then(res => {
+                                location.href = '/data/index.html'
+                            })
+                    })
+
+                    $container.appendChild($button)
+                    $container.appendChild($deleteButton)
+                    $filesDir.appendChild($container)
                 })
 
                 data.content.directories.forEach(dir => {
