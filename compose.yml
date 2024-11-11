@@ -1,27 +1,27 @@
 services:
 
-  # web:
-  #   build:
-  #     context: https://github.com/etec-integration-project/etec-pi-2024-frontend-TolerTomas.git
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - 9090:80
-  #   networks:
-  #     - toler-express-apps
-  #   depends_on:
-  #     - file-server-backend-app
-
   web:
-    image: nginx:1.17.1
+    build:
+      context: https://github.com/etec-integration-project/etec-pi-2024-frontend-TolerTomas.git
+      dockerfile: Dockerfile
     ports:
       - 9090:80
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-      - ./app:/usr/share/nginx/html
     networks:
       - toler-express-apps
     depends_on:
       - file-server-backend-app
+
+  # web:
+  #   image: nginx:1.17.1
+  #   ports:
+  #     - 9090:80
+  #   volumes:
+  #     - ./nginx.conf:/etc/nginx/nginx.conf
+  #     - ./app:/usr/share/nginx/html
+  #   networks:
+  #     - toler-express-apps
+  #   depends_on:
+  #     - file-server-backend-app
 
   postgres-db:
     image: postgres:16.2
